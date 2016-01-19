@@ -1,0 +1,29 @@
+{
+  "name": "handlebars-lint",
+  "description": "",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jonschlinkert/handlebars-lint",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/handlebars-lint",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/handlebars-lint/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.5"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "keywords": []
+}
