@@ -1,6 +1,6 @@
 {
   "name": "handlebars-lint",
-  "description": "",
+  "description": "Pass a context and a string with handlebars templates and lint for missing variables, helpers, block helpers or partials.",
   "version": "0.1.0",
   "homepage": "https://github.com/jonschlinkert/handlebars-lint",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -20,10 +20,39 @@
     "test": "mocha"
   },
   "dependencies": {
-    "handlebars": "^4.0.5"
+    "arr-union": "^3.1.0",
+    "extend-shallow": "^2.0.1",
+    "handlebars": "^4.0.5",
+    "isobject": "^2.1.0"
   },
   "devDependencies": {
-    "mocha": "*"
+    "gulp-format-md": "^0.1.9",
+    "mocha": "^2.4.5"
   },
-  "keywords": []
+  "keywords": [
+    "find",
+    "handlebars",
+    "helpers",
+    "lint",
+    "missing",
+    "template",
+    "templates",
+    "variables"
+  ],
+  "verb": {
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "lint": {
+      "reflinks": true
+    },
+    "reflinks": [
+      "verb"
+    ]
+  }
 }
