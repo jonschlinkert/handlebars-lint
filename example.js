@@ -1,20 +1,53 @@
 'use strict';
 
-var parse = require('./');
+var lint = require('./');
 
 var str = [
-  'foo',
-  '{{upper "bar"}}',
-  '{{baz}}',
-  'qux',
-  '{{abc (sub blah)}}',
-  '{{> onetwo (three blah)}}',
-  '{{> four five}}',
-  '{{#markdown foo}}',
-  '> bar',
-  '{{lower whatever}}',
-  '{{/markdown}}'
+  'Title: {{upper foo}}',
+  '',
+  'Hi, my name is {{proper name}}',
 ].join('\n');
 
-var res = parse(str);
-console.log(res)
+var missing = lint(str, {
+  context: {
+    helpers: {
+      upper: function() {},
+      proper: function() {},
+    },
+    variables: {
+      name: 'Brian'
+    }
+  }
+});
+console.log(missing);
+
+// var str = [
+//   'foo',
+//   '{{upper "bar"}}',
+//   '{{upper varname}}',
+//   '{{baz}}',
+//   '{{zzz name=name}}',
+//   'qux',
+//   '{{abc (sub blah)}}',
+//   '{{> onetwo (three blah)}}',
+//   '{{> four five}}',
+//   '{{#markdown foo}}',
+//   '> bar',
+//   '{{> six (seven eight)}}',
+//   '{{lower whatever}}',
+//   '{{/markdown}}',
+//   'bar'
+// ].join('\n');
+
+// var missing = lint(str, {
+//   context: {
+//     helpers: {
+//       upper: function() {},
+//       lower: function() {},
+//     },
+//     variables: {
+//       name: 'Brian'
+//     }
+//   }
+// });
+// console.log(missing);

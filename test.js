@@ -12,8 +12,8 @@ describe('handlebars-variables', function() {
     });
   });
 
-  describe('partials', function () {
-    it('should return a list of missing partials', function () {
+  describe('partials', function() {
+    it('should return a list of missing partials', function() {
       var fixture = '{{> foo }}{{> bar }}';
       var options = {
         context: {
@@ -24,8 +24,8 @@ describe('handlebars-variables', function() {
     });
   });
 
-  describe('variables', function () {
-    it('should return a list of missing variables', function () {
+  describe('variables', function() {
+    it('should return a list of missing variables', function() {
       var fixture = '{{foo one}}{{bar two}}';
       var options = {
         context: {
@@ -37,8 +37,8 @@ describe('handlebars-variables', function() {
     });
   });
 
-  describe('partials', function () {
-    it('should return a list of missing block helpers', function () {
+  describe('partials', function() {
+    it('should return a list of missing block helpers', function() {
       assert.deepEqual(lint('{{#foo}}...{{/foo}}', {context: {helpers: ['foo', 'qux']}}), {});
       assert.deepEqual(lint('{{#bar}}...{{/bar}}', {context: {helpers: ['foo', 'qux']}}), {
         blockHelpers: ['bar']
@@ -49,8 +49,8 @@ describe('handlebars-variables', function() {
     });
   });
 
-  describe('helpers', function () {
-    it('should return a list of missing helpers', function () {
+  describe('helpers', function() {
+    it('should return a list of missing helpers', function() {
       var fixture = '{{foo}}{{bar}}';
       options = {
         context: {
@@ -60,7 +60,7 @@ describe('handlebars-variables', function() {
       assert.deepEqual(lint(fixture, options), { helpers: ['bar'] });
     });
 
-    it('should return a list of missing variables', function () {
+    it('should return a list of missing variables', function() {
       options = {context: {helpers: ['foo']}};
       assert.deepEqual(lint('{{foo one}}{{bar two}}', options), {
         helpers: ['bar'],
