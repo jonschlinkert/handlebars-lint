@@ -41,6 +41,8 @@ Title: {{upper foo}}
 Hi, my name is {{proper name}}
 ```
 
+... and pass the following context:
+
 ```js
 var missing = lint(str, {
   context: {
@@ -111,6 +113,13 @@ Results in:
   blockHelpers: [ 'markdown' ] 
 }
 ```
+
+## Related projects
+
+You might also be interested in these projects:
+
+* [handlebars-helpers](https://www.npmjs.com/package/handlebars-helpers): 120+ Handlebars helpers in ~20 categories, for Assemble, YUI, Ghost or any Handlebars project. Includes… [more](https://www.npmjs.com/package/handlebars-helpers) | [homepage](https://github.com/assemble/handlebars-helpers)
+* [template-helpers](https://www.npmjs.com/package/template-helpers): Generic JavaScript helpers that can be used with any template engine. Handlebars, Lo-Dash, Underscore, or… [more](https://www.npmjs.com/package/template-helpers) | [homepage](https://github.com/jonschlinkert/template-helpers)
 
 ## Contributing
 

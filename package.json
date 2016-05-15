@@ -48,11 +48,17 @@
     "plugins": [
       "gulp-format-md"
     ],
-    "lint": {
-      "reflinks": true
+    "related": {
+      "list": [
+        "handlebars-helpers",
+        "template-helpers"
+      ]
     },
     "reflinks": [
       "verb"
-    ]
+    ],
+    "lint": {
+      "reflinks": true
+    }
   }
 }
