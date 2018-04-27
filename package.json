@@ -1,7 +1,7 @@
 {
   "name": "handlebars-lint",
   "description": "Lint for missing variables, helpers, block helpers or partials.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/jonschlinkert/handlebars-lint",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/handlebars-lint",
