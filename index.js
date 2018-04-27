@@ -1,23 +1,21 @@
 /*!
  * handlebars-lint <https://github.com/jonschlinkert/handlebars-lint>
  *
- * Copyright (c) 2016, Jon Schlinkert.
- * Licensed under the MIT License.
+ * Copyright (c) 2016-2018, Jon Schlinkert.
+ * Released under the MIT License.
  */
 
 'use strict';
 
-var isObject = require('isobject');
-var extend = require('extend-shallow');
-var union = require('arr-union');
+const union = require('arr-union');
 
 /**
- * Pass a context and a string with handlebars templates and lint for
+ * Pass a string with handlebars templates and an optional context to lint for
  * missing variables, helpers, block helpers or partials.
  *
  * ```js
- * var lint = require('handlebars-lint');
- * lint(string, options);
+ * const lint = require('handlebars-lint');
+ * lint(string[, options]);
  * ```
  * @param {String} `str` The string to lint.
  * @param {Object} `options` Pass a context on `options.context` or your own instance of handlebars on `options.hbs`.
@@ -25,26 +23,38 @@ var union = require('arr-union');
  * @api public
  */
 
-module.exports = function(str, options) {
-  var opts = extend({hbs: require('handlebars')}, options);
-  var ast = opts.hbs.parse(str);
-  var obj = filter(ast.body);
-  return lint(obj, opts.context);
-};
+function lint(str, options) {
+  const opts = Object.assign({ hbs: require('handlebars'), context: {} }, options);
+  const ast = opts.hbs.parse(str);
+  const obj = filter(ast.body);
+  const report = createReport(obj, opts.context);
+  if (report.variables) report.variables.sort();
+  if (report.blockHelpers) report.blockHelpers.sort();
+  if (report.partials) report.partials.sort();
+  if (report.helpers) report.helpers.sort();
+  return report;
+}
 
-function filter(body, tokens) {
-  tokens = tokens || {};
-  var len = body.length;
-  var idx = -1;
-
-  while (++idx < len) {
-    var node = body[idx];
+function filter(body, tokens = {}) {
+  for (const node of body) {
     if (node.type === 'ContentStatement') {
       continue;
     }
 
+    if (node.type === 'PartialBlockStatement') {
+      set(tokens, 'partialBlocks', node.name.parts[0]);
+    }
+
     if (node.type === 'PartialStatement') {
-      set(tokens, 'partials', node.name.parts[0]);
+      if (node.name.parts) {
+        set(tokens, 'partials', node.name.parts[0]);
+      } else if (node.name && node.name.type === 'SubExpression') {
+        set(tokens, 'helpers', node.name.path.parts[0]);
+      }
+    }
+
+    if (node.type === 'DecoratorBlock') {
+      set(tokens, 'decoratorBlocks', node.path.parts[0]);
     }
 
     if (node.type === 'BlockStatement') {
@@ -52,7 +62,7 @@ function filter(body, tokens) {
     }
 
     if (node.type === 'SubExpression' || node.type === 'MustacheStatement') {
-      set(tokens, 'helpers', node.path.parts[0]);
+      set(tokens, node.params.length || node.hash ? 'helpers' : 'variables', node.path.parts[0]);
     }
 
     if (node.type === 'PathExpression') {
@@ -66,6 +76,10 @@ function filter(body, tokens) {
     if (node.hasOwnProperty('program')) {
       filter(node.program.body, tokens);
     }
+
+    if (node.name && node.name.hash) {
+      filter(node.name.hash.pairs, tokens);
+    }
     if (node.hash) {
       filter(node.hash.pairs, tokens);
     }
@@ -73,26 +87,34 @@ function filter(body, tokens) {
       filter(node.params, tokens);
     }
   }
+
   return tokens;
+}
+
+function visit(node, fn) {
+  fn(node);
+  return node.nodes ? mapVisit(node, fn) : node;
+}
+
+function mapVisit(node, fn) {
+  node.nodes.forEach(child => fn(child));
+  return node;
 }
 
 function set(tokens, key, val) {
   tokens[key] = union(tokens[key] || [], val);
 }
 
-function lint(tokens, context) {
-  var report = {};
-  for (var key in tokens) {
-    if (tokens.hasOwnProperty(key)) {
-      var actual = toArray(key, context);
-      var expected = tokens[key];
-      var len = expected.length;
-      var idx = -1;
-      while (++idx < len) {
-        var name = expected[idx];
-        if (actual.indexOf(name) === -1) {
-          set(report, key, name);
-        }
+function createReport(tokens, context) {
+  const report = {};
+
+  for (const key of Object.keys(tokens)) {
+    var actual = toArray(key, context);
+    var expected = tokens[key];
+
+    for (const name of expected) {
+      if (!actual.includes(name)) {
+        set(report, key, name);
       }
     }
   }
@@ -120,3 +142,9 @@ function toArray(key, context) {
   }
   return [];
 }
+
+function isObject(val) {
+  return val && typeof val === 'object' && !Array.isArray(val);
+}
+
+module.exports = lint;
